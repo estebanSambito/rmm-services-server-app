@@ -2,6 +2,11 @@ package com.esa.test.services.server.exception;
 
 import java.util.Date;
 
+/**
+ * 
+ * @author esalazar
+ *
+ */
 public class ErrorDetails {
 	private Date timestamp;
 	private String message;

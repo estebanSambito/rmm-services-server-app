@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * @author esalazar
  *
  */
-@ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class ResourceNotFoundException extends Exception{
+@ResponseStatus(value = HttpStatus.OK)
+public class ResourceAlreadyExistsException extends Exception{
 
 	private static final long serialVersionUID = 1L;
 
-	public ResourceNotFoundException(String message){
+	public ResourceAlreadyExistsException(String message){
     	super(message);
     }
 }

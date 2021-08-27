@@ -11,9 +11,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.esa.test.services.server.security.JWTAuthorizationFilter;
 
+/**
+ * 
+ * @author esalazar
+ *
+ */
 @SpringBootApplication
-//ESA TODO pasar a otro archivo de acuerdo a la documentacion ya que en las pruebas de controller se cae
-//@EnableJpaAuditing
 public class RmmServicesServerAppApplication {
 
 	public static void main(String[] args) {
@@ -31,6 +34,7 @@ public class RmmServicesServerAppApplication {
 				.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
 				.authorizeRequests()
 				.antMatchers(HttpMethod.POST, "/api/v1/login").permitAll()
+//				.antMatchers(HttpMethod.GET, "/rmm/api/v1/").permitAll()
 				.anyRequest().authenticated();
 		}
 	}

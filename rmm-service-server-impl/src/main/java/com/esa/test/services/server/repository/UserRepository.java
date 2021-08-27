@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.esa.test.services.server.repository;
 
 import java.util.Optional;
@@ -14,10 +9,10 @@ import com.esa.test.services.server.model.UserEntity;
 
 /**
  *
- * @author bryan
+ * @author esalazar
  */
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
+public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
-	public Optional<UserEntity> findByNombreUsuario(String nombreUsuario);
+	public Optional<UserEntity> findByUserName(String userName);
 }

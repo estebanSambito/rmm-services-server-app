@@ -1,37 +1,50 @@
 package com.esa.test.services.server.model;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+/**
+ * 
+ * @author esalazar
+ *
+ */
 @Entity
-@Table(name = "rmm_usuario")
+@Table(name = "rmm_user")
 public class UserEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "us_id")
-	private int codigo;
-	@Column(name = "us_userName")
+	private int idUser;
+	@Column(name = "us_username")
 	private String userName;
 	@Column(name = "us_password")
 	private String password;
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+	private List<InvoiceEntity> invoices;
+	
 	@Transient
 	private String token;
 
 	@Transient
 	private boolean autenticado;
 
-	public int getCodigo() {
-		return codigo;
+	public int getIdUser() {
+		return idUser;
 	}
 
-	public void setCodigo(int codigo) {
-		this.codigo = codigo;
+	public void setIdUser(int idUser) {
+		this.idUser = idUser;
 	}
 
 	public String getUserName() {
@@ -68,7 +81,7 @@ public class UserEntity {
 
 	@Override
 	public String toString() {
-		return "Usuario [codigo=" + codigo + ", userName=" + userName + ", password=" + password + ", token=" + token
+		return "Usuario [codigo=" + idUser + ", userName=" + userName + ", password=" + password + ", token=" + token
 				+ ", autenticado=" + autenticado + "]";
 	}
 

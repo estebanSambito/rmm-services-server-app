@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,17 +21,26 @@ import com.esa.test.services.server.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-
+/**
+ * 
+ * @author esalazar
+ *
+ */
 @RestController
 @RequestMapping("/api/v1")
-public class UsuarioController {
+public class UserController {
 	@Autowired
 	private UserRepository usuarioRepository;
 
+	@GetMapping()
+	public String hello() {
+		return "esa";
+	}
+	
 	@PostMapping("/login")
 	public ResponseEntity<UserEntity> loginUsuario(@RequestBody UserEntity usuarioEnviado) throws ResourceNotFoundException {
-		UserEntity usuario = usuarioRepository.findByNombreUsuario(usuarioEnviado.getUserName())
-				.orElseThrow(() -> new ResourceNotFoundException("User not found :: " + usuarioEnviado.getUserName()));
+		UserEntity usuario = usuarioRepository.findByUserName(usuarioEnviado.getUserName())
+				.orElseThrow(() -> new ResourceNotFoundException("User not found[" + usuarioEnviado.getUserName()+"]"));
 		if (usuarioEnviado.getPassword()!= null && 
 				usuarioEnviado.getPassword().equals(usuario.getPassword())){
 			String token = getJWTToken(usuario);
@@ -39,9 +49,10 @@ public class UsuarioController {
 			UserEntity uResponse = new UserEntity();
 			uResponse.setUserName(usuarioEnviado.getUserName());
 			uResponse.setToken(token);
+			uResponse.setAutenticado(true);
 			return ResponseEntity.ok(uResponse);
 		}else {
-			throw new ResourceNotFoundException("Authentication error: " + usuarioEnviado.getUserName());
+			throw new ResourceNotFoundException("Authentication error[" + usuarioEnviado.getUserName()+"]");
 		}
 				
 	}
@@ -62,7 +73,7 @@ public class UsuarioController {
 								.map(GrantedAuthority::getAuthority)
 								.collect(Collectors.toList()))
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + 600000))
+				.setExpiration(new Date(System.currentTimeMillis() + 1200000))
 				.signWith(SignatureAlgorithm.HS512,
 						secretKey.getBytes()).compact();
 
