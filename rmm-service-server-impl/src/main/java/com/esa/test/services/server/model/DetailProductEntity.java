@@ -24,7 +24,7 @@ public class DetailProductEntity {
 
 	@Id
 //	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@GeneratedValue(strategy=GenerationType.AUTO)
+//	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name = "dt_id", insertable=true, updatable=true, unique=true, nullable=false)
 	private int idDetail;
 	
@@ -33,7 +33,7 @@ public class DetailProductEntity {
 	@JoinColumn(name = "product_id", referencedColumnName = "pr_id")
 	private ProductEntity product;
 	
-	@ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE,CascadeType.REFRESH}, fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_invoice", nullable = false, updatable = false)
 	private InvoiceEntity invoice;
 	
@@ -84,8 +84,7 @@ public class DetailProductEntity {
 
 	@Override
 	public String toString() {
-		return "DetailProductEntity [idDetail=" + idDetail + ", product=" + product + ", invoice=" + invoice
-				+ ", quantity=" + quantity + "]";
+		return "DetailProductEntity [idDetail=" + idDetail +", quantity=" + quantity + "]";
 	}
 	
 		

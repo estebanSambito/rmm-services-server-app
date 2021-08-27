@@ -16,6 +16,7 @@ import com.esa.test.services.server.model.InvoiceEntity;
 @Repository
 public interface InvoiceRepository extends CrudRepository<InvoiceEntity, Integer> {
 
-	@Query("select e from InvoiceEntity e where e.creationDate between ?1 and ?2 and e.user.userName=?3 ")
+	//@Query("select e from InvoiceEntity e where e.creationDate between ?1 and ?2 and e.user.userName=?3 ")
+	@Query("select e from InvoiceEntity e where e.creationDate != ?1 and e.creationDate != ?2 and e.user.userName=?3 ")
 	 List<InvoiceEntity> findByCreationDateAndUsername(Calendar lastMonth, Calendar actualMonth, String username);
 }

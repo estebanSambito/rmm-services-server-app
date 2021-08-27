@@ -32,12 +32,12 @@ public class InvoiceEntity {
 	@Column(name = "in_id")
 	private int idBilling;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice", fetch = FetchType.LAZY)
 //	@OneToMany(mappedBy = "invoice")
 	private List<DetailProductEntity> products;
 
 	@JoinColumn(name = "fk_user", nullable = false)
-	@ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(optional = false, cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
 	private UserEntity user;
 
 	@Temporal(TemporalType.TIMESTAMP)

@@ -82,13 +82,13 @@ public class DetailRepositoryIntegrationTest {
 		end.setTime(referenceDate);
 		String username="esalazar";
 		List<InvoiceEntity> resultInvoiceList = invoiceRepository.findByCreationDateAndUsername(ini, end, username);
-		LOG.debug("size:"+resultInvoiceList.size());
+		LOG.info("size:"+resultInvoiceList.size());
 		if (!resultInvoiceList.isEmpty()) {
 			InvoiceEntity invoiceEntity = resultInvoiceList.get(0);
 			Optional<BigDecimal> total = invoiceEntity.getProducts().stream().map(x -> x.getProduct().getCost())
 			.reduce((a, b) -> a.add(b));
 			
-			LOG.debug(total);
+			LOG.info(total);
 			invoiceEntity.setTotal(total.get());
 			invoiceRepository.save(invoiceEntity);
 		}

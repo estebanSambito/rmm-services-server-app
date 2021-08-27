@@ -26,9 +26,10 @@ import com.esa.test.services.server.model.enums.ProductTypes;
 public class ProductEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "pr_id")
 	private int idProd;
+	
 	@Column(name = "pr_name")
 	private String name;
 	//Service or product
@@ -39,9 +40,9 @@ public class ProductEntity {
 	@Column(name = "pr_cost")
 	private BigDecimal cost;
 	
-	@OneToOne(mappedBy = "product", cascade = CascadeType.ALL,
-             fetch = FetchType.LAZY, optional = false)
-    private DetailProductEntity  details;
+//	@OneToOne(mappedBy = "product", cascade = CascadeType.ALL,
+//             fetch = FetchType.LAZY, optional = false)
+//    private DetailProductEntity  details;
 	
 
 	public int getIdProd() {
@@ -78,8 +79,7 @@ public class ProductEntity {
 
 	@Override
 	public String toString() {
-		return "ProductEntity [idProd=" + idProd + ", name=" + name + ", type=" + type + ", cost=" + cost + ", details="
-				+ details + "]";
+		return "ProductEntity [idProd=" + idProd + ", name=" + name + ", type=" + type + ", cost=" + cost +"]";
 	}
 
 	

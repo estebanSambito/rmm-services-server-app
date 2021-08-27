@@ -22,7 +22,7 @@ import javax.persistence.Transient;
 public class UserEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "us_id")
 	private int idUser;
 	@Column(name = "us_username")
