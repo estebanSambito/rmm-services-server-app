@@ -4,12 +4,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -37,6 +34,8 @@ public class DetailProductEntity {
 	@JoinColumn(name = "fk_invoice", nullable = false, updatable = false)
 	private InvoiceEntity invoice;
 	
+	@Column(name = "dt_description",nullable = true)
+	private String description;
 	
 	@Column(name = "dt_quantity",nullable = false)
 	private int quantity;
@@ -84,7 +83,17 @@ public class DetailProductEntity {
 
 	@Override
 	public String toString() {
-		return "DetailProductEntity [idDetail=" + idDetail +", quantity=" + quantity + "]";
+		return "DetailProductEntity [idDetail=" + idDetail +", quantity=" + quantity  +", description=" + description + "]";
+	}
+
+
+	public String getDescription() {
+		return description;
+	}
+
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 		

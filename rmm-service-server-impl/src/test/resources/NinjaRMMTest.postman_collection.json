@@ -1,0 +1,395 @@
+{
+	"info": {
+		"_postman_id": "28898190-1b8f-479f-9787-20c1fd261c65",
+		"name": "NinjaRMMTest",
+		"description": "pruebas api ninja",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "loginSuccess",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"userName\":\"esalazar\",\r\n  \"password\":\"esalazar\" }"
+				},
+				"url": {
+					"raw": "http://localhost:8040/api/v1/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8040",
+					"path": [
+						"api",
+						"v1",
+						"login"
+					]
+				},
+				"description": "exitoso"
+			},
+			"response": []
+		},
+		{
+			"name": "listDevices",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{basepath}}/device",
+					"host": [
+						"{{basepath}}"
+					],
+					"path": [
+						"device"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addDetailService",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"idDetail\":1,\r\n    \"product\":{\r\n      \"idProd\":1\r\n    },\r\n    \"quantity\":2\r\n\r\n}"
+				},
+				"url": {
+					"raw": "{{basepath}}/detailservice",
+					"host": [
+						"{{basepath}}"
+					],
+					"path": [
+						"detailservice"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addDetailDevice",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"idDetail\":7,\r\n    \"product\":{\r\n      \"idProd\":1\r\n    },\r\n    \"description\":\"Maquina win 7 casa\"\r\n\r\n}"
+				},
+				"url": {
+					"raw": "{{basepath}}/detailDevice",
+					"host": [
+						"{{basepath}}"
+					],
+					"path": [
+						"detailDevice"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "removeDetailservice",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"idDetail\":1\r\n}"
+				},
+				"url": {
+					"raw": "{{basepath}}/detailservice",
+					"host": [
+						"{{basepath}}"
+					],
+					"path": [
+						"detailservice"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "editdetailService",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"idDetail\":1,\r\n    \"quantity\":2\r\n\r\n}"
+				},
+				"url": {
+					"raw": "{{basepath}}/detailservice",
+					"host": [
+						"{{basepath}}"
+					],
+					"path": [
+						"detailservice"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "editdetailDevice",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"idDetail\":1,\r\n    \"product\":{\r\n      \"idProd\":1\r\n    },\r\n    \"quantity\":1,\r\n    \"description\":\"System detail windows\"\r\n}"
+				},
+				"url": {
+					"raw": "{{basepath}}/detailDevice",
+					"host": [
+						"{{basepath}}"
+					],
+					"path": [
+						"detailDevice"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getUserServices",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{basepath}}/detailservice",
+					"host": [
+						"{{basepath}}"
+					],
+					"path": [
+						"detailservice"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getUserDevices",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{basepath}}/detailDevice/",
+					"host": [
+						"{{basepath}}"
+					],
+					"path": [
+						"detailDevice",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getDeviceById",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{basepath}}/detailDevice/1",
+					"host": [
+						"{{basepath}}"
+					],
+					"path": [
+						"detailDevice",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getTotalInvoice",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{basepath}}/detailservice/cost",
+					"host": [
+						"{{basepath}}"
+					],
+					"path": [
+						"detailservice",
+						"cost"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

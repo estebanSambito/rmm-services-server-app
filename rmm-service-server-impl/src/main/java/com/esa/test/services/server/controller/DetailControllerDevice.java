@@ -1,6 +1,5 @@
 package com.esa.test.services.server.controller;
 
-import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +30,6 @@ import com.esa.test.services.server.model.InvoiceEntity;
 import com.esa.test.services.server.model.ProductEntity;
 import com.esa.test.services.server.model.UserEntity;
 import com.esa.test.services.server.model.enums.ProductTypes;
-import com.esa.test.services.server.model.enums.StatusInvoice;
 import com.esa.test.services.server.repository.DetailRepository;
 import com.esa.test.services.server.repository.DeviceRepository;
 import com.esa.test.services.server.repository.InvoiceRepository;
@@ -45,8 +44,8 @@ import io.jsonwebtoken.Jwts;
  *
  */
 @RestController
-@RequestMapping("/api/v1/detailservice")
-public class DetailController {
+@RequestMapping("/api/v1/detailDevice")
+public class DetailControllerDevice {
 	@Autowired
 	private InvoiceRepository invoiceRepository;
 	
@@ -60,10 +59,20 @@ public class DetailController {
 	
 	private final String PREFIX = "Bearer ";
 	
-	private static final Log LOG=LogFactory.getLog(DetailController.class);
+	private static final Log LOG=LogFactory.getLog(DetailControllerDevice.class);
+	
+	@GetMapping("/{idDetailDevice}")
+	public ResponseEntity<DetailProductEntity> getDetailDevice(@RequestHeader (name="Authorization") String token, @PathVariable String idDetailDevice) throws ResourceNotFoundException
+	{
+		DetailProductEntity findById = detailRepository.findById(Integer.parseInt(idDetailDevice)).orElseThrow(()->new ResourceNotFoundException("Device Not Found"));
+
+		findById.setInvoice(null);
+		return ResponseEntity.ok(findById);
+		
+	}
 	
 	@GetMapping()
-	public ResponseEntity<List<DetailProductEntity>> getServices(@RequestHeader (name="Authorization") String token) throws ResourceNotFoundException
+	public ResponseEntity<List<DetailProductEntity>> getAllDetailDevice(@RequestHeader (name="Authorization") String token) throws ResourceNotFoundException
 	{
 		Date referenceDate = new Date();
 		Calendar ini = Calendar.getInstance();
@@ -86,62 +95,15 @@ public class DetailController {
 		}else {
 			currentInvoice = invoiceList.get(0);
 			LOG.info("found: " +currentInvoice);
-			List<DetailProductEntity> resList = currentInvoice.getProducts().stream().filter(x->ProductTypes.SERVICE.getName().equals(x.getProduct().getType())).collect(Collectors.toList());
+			List<DetailProductEntity> resList = currentInvoice.getProducts().stream().filter(x->ProductTypes.DEVICE.getName().equals(x.getProduct().getType())).collect(Collectors.toList());
 			resList.forEach(x->x.setInvoice(null));
-			return ResponseEntity.ok(resList);	
+			return ResponseEntity.ok(resList);			
 		}
 }
-	
-	@GetMapping("/cost")
-	@Transactional
-	public ResponseEntity<InvoiceEntity> getMonthInvoice(@RequestHeader (name="Authorization") String token) throws ResourceNotFoundException
-	{
-		InvoiceEntity returnEntity;
-		Date referenceDate = new Date();
-		Calendar ini = Calendar.getInstance();
-		ini.setTime(referenceDate);
-		ini.add(Calendar.MONTH, -1);
-		Calendar end = Calendar.getInstance();
-		end.setTime(referenceDate);
-		LOG.debug("--->"+token);
-		String jwtToken = token.replace(PREFIX, "");
-		Claims allClaimsFromToken = getAllClaimsFromToken(jwtToken);
-		String subject = allClaimsFromToken.getSubject();
-		LOG.info("sub:" + subject);
-		LOG.info("ESA -->" + subject);
-		String username=subject;
-		List<InvoiceEntity> invoiceList = invoiceRepository.findByCreationDateAndUsername(ini,end,username);
-		LOG.info("total: " + invoiceList.size());
-		if (invoiceList== null || invoiceList.size()==0) {
-			throw new ResourceNotFoundException("Not elements registered");
-		}else {
-			InvoiceEntity invoiceEntity = invoiceList.get(0);
-			BigDecimal total = invoiceEntity.getProducts().stream()
-					//.peek(x->System.out.println(x.getProduct().getCost().multiply(new BigDecimal(x.getQuantity()))))
-					.map(x -> x.getProduct().getCost().multiply(new BigDecimal(x.getQuantity())))
-			.reduce(BigDecimal.ZERO, BigDecimal::add);
-			
-			LOG.info("total suma:"+ total);
-			invoiceEntity.setTotal(total);
-			invoiceEntity.setStatus(StatusInvoice.CLOSED.getName());
-			returnEntity = invoiceRepository.save(invoiceEntity);
-			
-		}
-		InvoiceEntity ligthEnt = new InvoiceEntity();
-		ligthEnt.setTotal(returnEntity.getTotal());
-		ligthEnt.setCreationDate(returnEntity.getCreationDate());
-		UserEntity wUse = new UserEntity();
-		wUse.setIdUser(returnEntity.getUser().getIdUser());
-		wUse.setUserName(subject);
-		ligthEnt.setUser(wUse);
 		
-		//TODO que no retorne los otros elementos al consultar
-		return ResponseEntity.ok(ligthEnt);
-}
-	
 	@PostMapping()
 	@Transactional
-	public ResponseEntity<DetailProductEntity> addService(@RequestBody DetailProductEntity itemEnviado,@RequestHeader (name="Authorization") String token)
+	public ResponseEntity<DetailProductEntity> addDetailDevice(@RequestBody DetailProductEntity itemEnviado,@RequestHeader (name="Authorization") String token)
 			throws ResourceAlreadyExistsException, ResourceNotFoundException {
 		
 		Date referenceDate = new Date();
@@ -175,7 +137,7 @@ public class DetailController {
 			//debe enviar el ID de item y el id de producto
 			Optional<ProductEntity> findById = deviceRepository.findById(itemEnviado.getProduct().getIdProd());
 			if(!findById.isPresent()) {
-				throw new ResourceNotFoundException("Service id ["+itemEnviado.getIdDetail()+"] not found");
+				throw new ResourceNotFoundException("Device id["+itemEnviado.getIdDetail()+"] not found");
 			}
 			ProductEntity productEntity = findById.get();
 			LOG.info("product: " + productEntity);
@@ -192,14 +154,14 @@ public class DetailController {
 			if(!detailElement.isPresent()) {
 				Optional<ProductEntity> findById = deviceRepository.findById(itemEnviado.getProduct().getIdProd());
 				if(!findById.isPresent()) {
-					throw new ResourceNotFoundException("Service id ["+itemEnviado.getIdDetail()+"] not found");
+					throw new ResourceNotFoundException("Device id["+itemEnviado.getIdDetail()+"] not found");
 				}
 				itemEnviado.setProduct(findById.get());
 				itemEnviado.setInvoice(currentInvoice);
 				LOG.info("item to save : "+itemEnviado);
 				detailRepository.save(itemEnviado);
 			}else {
-				throw new ResourceNotFoundException("Service id ["+itemEnviado.getIdDetail()+"] already registered");
+				throw new ResourceNotFoundException("Device id["+itemEnviado.getIdDetail()+"] already registered");
 			}
 			save = currentInvoice;
 
@@ -211,7 +173,7 @@ public class DetailController {
 	}
 	@PutMapping()
 	@Transactional
-	public ResponseEntity<DetailProductEntity> editService(@RequestBody DetailProductEntity itemEnviado,@RequestHeader (name="Authorization") String token)
+	public ResponseEntity<DetailProductEntity> editDetailDevice(@RequestBody DetailProductEntity itemEnviado,@RequestHeader (name="Authorization") String token)
 			throws ResourceAlreadyExistsException, ResourceNotFoundException {
 		
 		Date referenceDate = new Date();
@@ -229,11 +191,10 @@ public class DetailController {
 		
 		List<InvoiceEntity> invoiceList = invoiceRepository.findByCreationDateAndUsername(ini,end,username);
 		InvoiceEntity currentInvoice;
-		InvoiceEntity save;
 		LOG.info("total: " + invoiceList.size());
 		if (invoiceList== null || invoiceList.size()==0) {
 			LOG.info("not found: ");
-				throw new ResourceNotFoundException("Service id ["+itemEnviado.getIdDetail()+"] not found");
+				throw new ResourceNotFoundException("Device id["+itemEnviado.getIdDetail()+"] not found");
 		}else{
 			currentInvoice = invoiceList.get(0);
 			LOG.info("found: " +currentInvoice);
@@ -246,9 +207,8 @@ public class DetailController {
 				}
 				detailRepository.save(detailProductEntity);
 			}else {
-				throw new ResourceNotFoundException("Service id ["+itemEnviado.getIdDetail()+"] not found");
+				throw new ResourceNotFoundException("Device id["+itemEnviado.getIdDetail()+"] not found");
 			}
-			save = currentInvoice;
 			
 		}
 		itemEnviado.setInvoice(null);
@@ -265,7 +225,7 @@ public class DetailController {
 	
 	@DeleteMapping()
 	@Transactional
-	public BodyBuilder deleteService(@RequestBody DetailProductEntity itemEnviado)
+	public BodyBuilder deleteDetailDevice(@RequestBody DetailProductEntity itemEnviado)
 			throws ResourceNotFoundException {
 		
 		Date referenceDate = new Date();

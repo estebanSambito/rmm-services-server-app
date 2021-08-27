@@ -134,7 +134,16 @@ required for next requests.
 
 	{}
 
-#Add Device or Service
+#Add Device
+
+Operation to add service or device for the current month
+
+`POST /detailDevice`
+
+    curl -d '{"idDetail":1,"product":{"idProd":1},"quantity":1}' -H 'Accept: application/json' -H 'Authorization: Bearer ...' http://localhost:8040/api/v1/detailDevice
+
+
+#Add Service
 
 Operation to add service or device for the current month
 

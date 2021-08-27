@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
 //@AutoConfigureMockMvc
- @AutoConfigureRestDocs
+@AutoConfigureRestDocs(outputDir = "target/snippets")
 class UserControllerIntegrationTest {
 
 	@Autowired
@@ -68,7 +68,8 @@ class UserControllerIntegrationTest {
 	       mvc.perform(request)
 	    		   .andExpect(status().isOk())
 	               .andExpect(jsonPath("autenticado", is(usuarioEsperado.isAutenticado())))
-	               .andExpect(jsonPath("token", not("")));
+	               .andExpect(jsonPath("token", not("")))
+	               .andDo(document("login"));;
 	   }
 	   
 	   @Test
